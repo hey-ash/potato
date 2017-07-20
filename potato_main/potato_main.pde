@@ -12,10 +12,18 @@ color c1=color(230, 100, 10);
 float vxtoss;
 float vytoss;
 
+float xStartPoint; //starting position for ball
+float yStartPoint; //starting position for ball
+
+float aygrav;
+float vygrav;
+
 void setup() {
   fullScreen();
-  xpos=width/2;
-  ypos=height/8*6;
+  xStartPoint = width / 2;
+  yStartPoint = height / 8 * 6;
+  xpos=xStartPoint;
+  ypos=yStartPoint;
   hoopx=width/2;
   hoopy=height/8*3;
   noStroke();
@@ -30,6 +38,7 @@ void draw() {
   drawball();
   ballover();
   tossball();
+  toss();
   if (gravon) {
     gravity();
   }
@@ -48,8 +57,8 @@ void drawhoop() {
 }
 
 void gravity() {
-  float aygrav = 50/m;
-  float vygrav=0;
+  aygrav = 50/m;
+  vygrav=0;
   vygrav += aygrav;
   ypos += vygrav;
 }
@@ -80,13 +89,23 @@ void toss() {
     // should be the same as the mouse location.
     xpos=mouseX;
     ypos=mouseY;
-  } else {
-    // otherwise it should be traveling
-    // according to its velocity.
-    xpos += vxtoss;
-    ypos += vytoss;
   }
+  else if (((ypos + 50) < 0) || ((ypos - 50) > height)) {
+    //reset ball to starting position if screen exceeded
+    xpos = xStartPoint;
+    ypos = yStartPoint;
+    vxtoss = 0; //how do i reset momentum help !!!
+    vytoss = 0; //!!!
+    vygrav = 0; //!!!
+    }
+     // otherwise it should be traveling
+     // according to its velocity.
+    else {
+      xpos += vxtoss;
+      ypos += vytoss;
+    }
 }
+
 void mouseReleased() {
   vxtoss = mouseX-pmouseX;
   vytoss = mouseY-pmouseY;
